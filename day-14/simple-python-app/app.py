@@ -4,7 +4,10 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello():
-    return 'Hello, world! hosbcjkdlbcjkdbcdvbkhbdlcbadljcbdh cld ched'
+    a=1
+    b=2
+    c=a+b
+    return f"output is {c}"
 
 if __name__ == '__main__':
     app.run()
