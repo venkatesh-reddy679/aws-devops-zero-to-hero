@@ -7,7 +7,7 @@ def hello():
     a=1
     b=2
     c=a+b
-    return f"output is {c}"
+    return f"output is {c} haha"
 
 if __name__ == '__main__':
     app.run()
