@@ -3,14 +3,14 @@ os: linux
 
 hooks:
   ApplicationStop:
-    - location: ./script/container_stop.sh
+    - location: ./scripts/container_stop.sh
       timeout: 300
       runas: root
   ApplicationStart:
-    - location: ./script/container_start.sh
+    - location: ./scripts/container_start.sh
       timeout: 300
       runas: root
   ValidateService:
-    - location: ./script/validate.sh
+    - location: ./scripts/validate.sh
       timeout: 120
       runas: root
