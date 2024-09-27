@@ -8,7 +8,9 @@ def hello():
     b=2
     c=a+b
     return f"output is {c}"
-
+@app.route('/testme')
+def hello():
+    return "heyy this is a test api for triggering the aws codepipeline"
 if __name__ == '__main__':
     app.run()
 
