@@ -1,0 +1,43 @@
+version: 0.2
+
+run-as: root
+
+env:
+  variables:
+    repo_name: "test-image"
+    git_username: "venkatesh-reddy679"
+    git_repo: "aws-devops-zero-to-hero"
+    git_config_user: "venkatesh reddy"
+    git_config_email: "venkatesh.reddy679@gmail.com"
+  parameter-store:
+    registry: ecr-registry-url
+    git_token: git-pat
+    
+phases:
+  install:
+    run-as: root
+    on-failure: ABORT
+    runtime-versions:
+      python: 3.8
+    
+  build:
+    run-as: root
+    on-failure: ABORT
+    commands:
+      - git clone https://${git_token}@github.com/${git_username}/${git_repo}.git
+      - cd ${git_repo}/day-14/simple-python-app
+      - aws ecr get-login-password  | docker login -u AWS --password-stdin ${registry}
+      - docker build -t "${registry}${repo_name}:${CODEBUILD_BUILD_NUMBER}" .
+      - docker images
+      - docker push "${registry}${repo_name}:${CODEBUILD_BUILD_NUMBER}"
+      - echo "image pushed successfully"
+      - cd ../..
+      - sed -i "s|${registry}${repo_name}:[0-9]*|${registry}${repo_name}:${CODEBUILD_BUILD_NUMBER}|g" scripts/container_start.sh
+      - git config --global user.name ${git_config_user}
+      - git config --global user.email ${git_config_email}
+      - git add scripts/container_start.sh
+      - git commit -m "updated container_star.sh script with build number ${CODEBUILD_BUILD_NUMBER}"
+      - git push origin main
+      - echo "chages pushed to git"
+    finally:
+      - docker system prune -a
